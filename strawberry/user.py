@@ -1,16 +1,24 @@
 import time
 import openai
+import typing
+import asyncio
 
 from strawberry.prometheus import Prometheus
 
 
 class User:
-    def __init__(self, prometheus: Prometheus) -> None:
+    def __init__(self, prometheus: Prometheus, wait: typing.Callable) -> None:
         self._prometheus = prometheus
         self._client = openai.AsyncOpenAI(
             base_url="http://server:8000/v1",
             api_key="token",
         )
+        self._wait = wait
+    
+    async def start(self) -> None:
+        while True:
+            await self.request()
+            await asyncio.sleep(self._wait())
 
     async def request(self) -> None:
         start_time = time.time()
