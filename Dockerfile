@@ -8,6 +8,6 @@ RUN pip install --upgrade pip
 
 RUN pip install prometheus-client==0.21.1 openai==1.59.4
 
-COPY ./strawberry ./strawberry
+COPY ./strawberry /opt/strawberry
 
-CMD ["python", "-u", "./strawberry"]
+CMD ["python", "-m", "strawberry"]
