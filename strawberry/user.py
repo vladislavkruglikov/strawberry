@@ -27,9 +27,11 @@ class User:
         async for chunk in stream:
             if is_first_chunk:
                 time_to_first_token = time.time() - start_time
+                self._prometheus.request_time_to_first_token_latency_metric(time_to_first_token)
                 is_first_chunk = False
             else:
                 time_per_output_token = time.time() - previous_chunk_end_time
+                self._prometheus.request_time_per_output_token_latency_metric(time_per_output_token)
             
             previous_chunk_end_time = time.time()
             
