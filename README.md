@@ -62,10 +62,6 @@ Now you have got your storage set up and inference server running and the only l
 docker run --network strawberry --rm --name strawberry strawberry
 ```
 
-Parameters
-
-`--address` specify prefix open ai like api url
-
 ## Plots
 
 Now you are ready to visualize your results in Grafana. Grab this dashboard template and install it into your grafana template. Select source for data your cloud instance
