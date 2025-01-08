@@ -10,4 +10,4 @@ RUN pip install prometheus-client==0.21.1 openai==1.59.4
 
 COPY ./strawberry /opt/strawberry
 
-CMD ["python", "-m", "strawberry"]
+ENTRYPOINT ["python", "-m", "strawberry"]
