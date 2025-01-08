@@ -10,6 +10,21 @@ Additionally this repository contains notes about metrics and everything I find 
 
 The core idea behind Strawberry is that it is not attached to any particular library or framework. Instead it works with the abstraction provided by the OpenAI API. Any library or framework that provides an OpenAI API most of which already do such as **vLLM** or **SGLang** can be benchmarked with this tool right now with no additional code writing or modifications. This way Strawberry has no information about the internals of the framework. All it cares about is the common protocol which is the OpenAI API chat completions
 
+![Board](./resources/board.jpg)
+
+## Attention
+
+This is pretty much raw version of this tool that I wanted to release as soon as possible. I will add a a lot more soon. Here is short list of things I want to add
+
+* Smarter data samplers 
+* Summary table with popular models benchmarked using that tool across different frameworks
+* Add tests
+* Smart users with more granular settings that can send multiple turns
+* Maybe presets such that can be versionized  
+* Synthetic load test dataset generation based on distribution of your data
+
+Feel free to ask for features you are interested or contribute. You can also direct message me and my contacts are in the my profile
+
 ## 32+ Metrics
 
 Wide range of most popular metrics
@@ -96,6 +111,8 @@ docker run \
 
 Now you are ready to visualize your results in Grafana. Grab [this](./grafana/dashboard.json) dashboard template and install it into your grafana template. Select source for data your cloud instance
 
+![Import Dashboard](./resources/import_dashboard.png)
+
 ## Notes
 
 If you want you can build benchmark image from scrach you can do
@@ -110,6 +127,7 @@ For now it seems that proprietary large language models can help with that
 
 ## References
 
-Good articles
+Great articles
 
 * https://hao-ai-lab.github.io/blogs/distserve
+* https://blog.ori.co/how-to-perform-a-cost-per-token-analysis-of-self-hosted-llms-dbrx-from-databricks
