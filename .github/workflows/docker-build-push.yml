@@ -28,4 +28,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_REGISTRY_URL }}/${{ secrets.DOCKER_USERNAME }}/strawberry:${{ github.ref_name }}
+          tags: ${{secrets.DOCKER_REGISTRY_URL}}/${{secrets.DOCKER_USERNAME}}/strawberry:${{github.ref_name}}
