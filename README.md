@@ -4,59 +4,84 @@
 
 ![Dashboard Image](./resources/dashboard.png)
 
-Strawberry is a tool that allows you to conveniently benchmark large language model inference servers that provide OpenAI like chat completion API. Strawberry uses Prometheus for metric collection and Grafana for visualization while our custom code is used to send requests to the server. Strawberry provides a convenient way to run benchmarks and record your metrics into remote storage. It is very flexible since you can connect it to your custom Prometheus instance or Grafana if you want to keep your data private with minimal changes to the configuration files. You can use one of our templates for Grafana dashboards that cover the most popular metrics or you can extend them and build your own from the data collected during benchmarking. You can also record your own metrics and use them
+Strawberry is a tool designed to facilitate benchmarking of large language model inference servers that implement 
+OpenAI like chat completion APIs. It leverages Prometheus for metric collection and Grafana for visualization while 
+custom code is utilized to send requests to the server. Strawberry provides an efficient and structured approach to
+run benchmarks and store metrics in remote storage. It is highly flexible allowing integration with custom Prometheus
+instances or Grafana setups for maintaining data privacy with minimal configuration changes. Users can utilize predefined
+Grafana dashboard templates covering popular metrics or extend and customize these dashboards using the data collected during
+benchmarking. Furthermore Strawberry allows users to define and record their own metrics for tailored analysis
 
-Additionally this repository contains notes about metrics and everything I find interesting and that might be helpful for anyone interested in benchmarking LLMs
+Additionally this repository includes notes on metrics and various 
+insights that may be valuable for individuals interested in benchmarking
+large language models LLMs
 
-The core idea behind Strawberry is that it is not attached to any particular library or framework. Instead it works with the abstraction provided by the OpenAI API. Any library or framework that provides an OpenAI API most of which already do such as **vLLM** or **SGLang** can be benchmarked with this tool right now with no additional code writing or modifications. This way Strawberry has no information about the internals of the framework. All it cares about is the common protocol which is the OpenAI API chat completions
+The core concept behind Strawberry is its independence from any 
+specific library or framework. Instead, it operates with the abstraction
+provided by the OpenAI API. Any library or framework that implements the
+OpenAI API such as **vLLM** or **SGLang** can be benchmarked with Strawberry
+without requiring additional code or modifications. This approach ensures that 
+Strawberry remains agnostic to the internals of the framework focusing solely
+on the shared protocol defined by the OpenAI API for chat completions
 
 ![Board](./resources/board.jpg)
 
 ## Attention
 
-This is pretty much raw version of this tool that I wanted to release as soon as possible. I will add a a lot more soon. Here is short list of things I want to add
+This is an early version of the tool that I aimed to release as 
+quickly as possible. Significant enhancements and features are planned
+for future updates. Below is a brief list of features I intend to implement
 
-* Smarter data samplers 
-* Summary table with popular models benchmarked using that tool across different frameworks
-* Add tests
-* Smart users with more granular settings that can send multiple turns
-* Maybe presets such that can be versionized  
-* Synthetic load test dataset generation based on distribution of your data
+- Advanced data samplers for more efficient benchmarking
+- A summary table showcasing benchmarks of popular models across various frameworks using this tool
+- Comprehensive test coverage to ensure reliability and accuracy
+- Enhanced user simulation with granular settings including the ability to handle multi turn interactions
+- Configurable presets that can be version controlled for consistent benchmarking setups
+- Synthetic load test dataset generation based on the distribution of your data
 
-Feel free to ask for features you are interested or contribute. You can also direct message me and my contacts are in the my profile
+Feel free to suggest features you would like to see or contribute directly. You are also welcome to contact me directly; my contact information is available in my profile.
 
 ## 32+ Metrics
 
-Wide range of most popular metrics
+A comprehensive range of popular metrics is supported including
 
-* TTFT - time to first token
-* TPOT - time per output token
-* Total latency by percentiles
-* Goodput
-* & others
-* easy to add new metrics
+- **TTFT** Time to first token
+- **TPOT** Time per output token
+- **Total latency** Measured by percentiles
+- **Goodput** Effective throughput of successful responses
+- **Other metrics** Additional useful measurements
+- **Extensibility** Easily add new custom metrics to suit specific needs
 
 ## Storage
 
-Despite the fact that this section might be seen hard it only needs to be done once and then can be used with any other framework such as **vLLM** or **SGLang**
+Although this section may initially seem complex it only needs to be
+completed once and can then be reused with any framework such as **vLLM** or **SGLang**
 
-In this section you will create Grafana Cloud workspace with Cloud Prometheus that will allow you to store and visualize your data. If you are not familiar with that technologies they are very popular so it might be helpful anyway
+In this section you will set up a Grafana Cloud workspace with Cloud Prometheus to store
+and visualize your benchmarking data. If you are unfamiliar with these technologies
+they are widely used and learning them may prove beneficial for other applications as well
 
-First you need to create [Grana Cloud](https://grafana.com/products/cloud) that will be used to store and visualize load test results
+First create a [Grafana Cloud](https://grafana.com/products/cloud) account to store and
+visualize load test results
 
-Then we need to setup single configuration file where we will put information about our workspace that we have created. You can find template in `prometheus.yaml`
+Next configure a single file `prometheus.yaml` where you will input
+information about the Grafana Cloud workspace you just created. A template
+for this file is available in the repository
 
-Start with remote write configuration. In order to find needed information about your workspace go to your [Grafana Account](https://grafana.com/auth/sign-in) where you are likely to have single Grafana Cloud Stack which you will need to select and click Launch. Then you will see manage your stack page where you can see Prometheus stack. You need to click details in the Prometheus stack. Scroll down to Sending metrics with Prometheus and you will find remote write configuration for your workspace. You can generate API token which is your password by clicking Generate now in the same page
+Start by setting up the remote write configuration. To find the necessary information about your workspace. Log in to your [Grafana Account](https://grafana.com/auth/sign-in). Select 
+your Grafana Cloud Stack (most users will have a single stack) and click **Launch**. On the **Manage Your Stack** page
+locate the Prometheus stack and click **Details**. Scroll down to the **Sending metrics with Prometheus** section to find the remote write 
+configuration details for your workspace. Generate an API token by clicking **Generate now** on the same page
 
-After you have updated `prometheus.yaml` with provided information you are left with targets parameter where you need to specify url that will expose metrics. You can leave it unchanged since we will run code in docker and it is already programmed to use that particular host and port
+Update the `prometheus.yaml` file with the provided remote write configuration. You will also see a `targets` parameter in the file. This parameter specifies the URL that exposes metrics. For this setup you can leave it unchanged because the code when run in Docker is already configured to use the appropriate host and port
 
-Create common network that will be used for all containers
+Next create a common Docker network to be used by all containers
 
 ```bash
 docker network create strawberry
 ```
 
-Now you are ready to start prometheus
+Finally start Prometheus using Docker
 
 ```bash
 docker run \
@@ -70,7 +95,7 @@ docker run \
 
 ## Server
 
-In this section you will run Open AI like inference server chat completions API
+Now start one of your OpenAI like inference web server
 
 ```bash
 docker run \
