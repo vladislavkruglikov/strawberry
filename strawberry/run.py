@@ -24,6 +24,7 @@ class Run:
                 await asyncio.sleep(1)
 
             user = User(prometheus=self._prometheus, wait=self._wait, dataset=self._dataset)
+            self._prometheus.increase_users_count()
             task = asyncio.create_task(user.start())
             background_tasks.add(task)
             task.add_done_callback(background_tasks.discard)
