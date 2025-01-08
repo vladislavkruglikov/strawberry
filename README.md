@@ -67,11 +67,16 @@ docker run \
   --name strawberry \
   -v $(pwd)/datasets:/mnt/datsets \
   vladislavkruglikov/strawberry \
+    --run_name_prefix qwen05b_instruct \
+    --openai_base_url http://server:8000/v1 \
+    --model_name Qwen/Qwen2.5-0.5B-Instruct" \
+    --prometheus_port 8000 \
+    --dataset_path /mnt/datsets/dataset.txt \
     --max_users 8 \
     --wait_start 1 \
     --wait_end 4 \
     --users_per_second 1 \
-    --run_time 128
+    --run_time 200000
 ```
 
 ## Plots
@@ -85,6 +90,10 @@ If you want you can build benchmark image from scrach you can do
 ```bash
 docker build --tag strawberry .
 ```
+
+## Frequently Asked Questions
+
+For now it seems that proprietary large language models can help with that
 
 ## References
 
