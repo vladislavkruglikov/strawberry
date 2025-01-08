@@ -1,5 +1,7 @@
 ## 🍓 Strawberry
 
+**Supports [vLLM](https://github.com/vllm-project/vllm), [SGLang](https://github.com/sgl-project/sglang), [TensorRT-LLM](https://github.com/NVIDIA/TensorRT-LLM), [TGI](https://github.com/huggingface/text-generation-inference), [LMDeploy](https://github.com/InternLM/lmdeploy)**
+
 Strawberry is a tool that allows you to conveniently benchmark large language model inference servers that provide OpenAI like chat completion API. Strawberry uses Prometheus for metric collection and Grafana for visualization while our custom code is used to send requests to the server. Strawberry provides a convenient way to run benchmarks and record your metrics into remote storage. It is very flexible since you can connect it to your custom Prometheus instance or Grafana if you want to keep your data private with minimal changes to the configuration files. You can use one of our templates for Grafana dashboards that cover the most popular metrics or you can extend them and build your own from the data collected during benchmarking. You can also record your own metrics and use them
 
 Additionally this repository contains notes about metrics and everything I find interesting and that might be helpful for anyone interested in benchmarking LLMs
