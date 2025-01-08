@@ -6,6 +6,7 @@ import argparse
 
 from strawberry.run import Run
 from strawberry.user import User
+from strawberry.dataset import Dataset
 from strawberry.prometheus import Prometheus
 
 
@@ -17,7 +18,7 @@ async def program() -> None:
     parser.add_argument("--wait_start", type=int, required=False, default=1)
     parser.add_argument("--wait_end", type=int, required=False, default=4)
     parser.add_argument("--users_per_second", type=int, required=False, default=1)
-    parser.add_argument("--run_time", type=int, required=False, default=32)
+    parser.add_argument("--run_time", type=int, required=False, default=128)
 
     arguments = parser.parse_args()
     
@@ -25,12 +26,15 @@ async def program() -> None:
     
     prometheus = Prometheus(run=arguments.run_name)
 
+    dataset = Dataset(file_path="/mnt/datsets/dataset.txt")
+
     run = Run(
         prometheus=prometheus, 
         max_users=arguments.max_users, 
         wait=lambda: random.uniform(arguments.wait_start, arguments.wait_end), 
         users_per_second=arguments.users_per_second, 
-        run_time=arguments.run_time
+        run_time=arguments.run_time,
+        dataset=dataset
     )
 
     await run.start()

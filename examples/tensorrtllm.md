@@ -3,10 +3,17 @@
 How to benchmark TensorRT-LLM. Prepare engine first
 
 ```bash
-docker run -it --gpus all nvidia/cuda:12.4.1-devel-ubuntu22.04 bash
+docker run \
+  -it \
+  --gpus all \
+  -v $(pwd)/engines:/mnt/engines \
+  nvidia/cuda:12.4.1-devel-ubuntu22.04 bash
+
 apt-get update
 apt install python3-pip
-apt-get -y install libopenmpi-dev && pip3 install tensorrt_llm==0.13.0
+apt-get -y install libopenmpi-dev
+apt-get install vim
+pip3 install tensorrt_llm==0.13.0
 ```
 
 ```bash
@@ -18,7 +25,7 @@ from tensorrt_llm import LLM, SamplingParams
 
 
 llm = LLM(model="TinyLlama/TinyLlama-1.1B-Chat-v1.0")
-llm.save("./tiny_llama_engine")
+llm.save("/mnt/engines/tiny_llama_engine")
 ```
 
 ```bash

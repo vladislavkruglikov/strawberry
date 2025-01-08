@@ -61,7 +61,17 @@ docker run \
 Now you have got your storage set up and inference server running and the only left part is to send requests to the server and record metrics. This is what we are going to do now
 
 ```bash
-docker run --network strawberry --rm --name strawberry strawberry
+docker run \
+  --network strawberry \
+  --rm \
+  --name strawberry \
+  -v $(pwd)/datasets:/mnt/datsets \
+  vladislavkruglikov/strawberry \
+    --max_users 8 \
+    --wait_start 1 \
+    --wait_end 4 \
+    --users_per_second 1 \
+    --run_time 128
 ```
 
 ## Plots

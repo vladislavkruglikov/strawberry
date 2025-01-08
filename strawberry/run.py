@@ -2,16 +2,18 @@ import typing
 import asyncio
 
 from strawberry.user import User
+from strawberry.dataset import Dataset
 from strawberry.prometheus import Prometheus
 
 
 class Run:
-    def __init__(self, prometheus: Prometheus, max_users: int, wait: typing.Callable, users_per_second: int, run_time: int) -> None:
+    def __init__(self, prometheus: Prometheus, max_users: int, wait: typing.Callable, users_per_second: int, run_time: int, dataset: Dataset) -> None:
         self._prometheus = prometheus
         self._max_users = max_users
         self._wait = wait
         self._users_per_second = users_per_second
         self._run_time = run_time
+        self._dataset = dataset
     
     async def start(self) -> None:
         background_tasks = set()
@@ -21,7 +23,7 @@ class Run:
             if currect_active_users > 0 and currect_active_users % self._users_per_second == 0:
                 await asyncio.sleep(1)
 
-            user = User(prometheus=self._prometheus, wait=self._wait)
+            user = User(prometheus=self._prometheus, wait=self._wait, dataset=self._dataset)
             task = asyncio.create_task(user.start())
             background_tasks.add(task)
             task.add_done_callback(background_tasks.discard)

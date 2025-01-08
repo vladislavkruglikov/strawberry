@@ -3,17 +3,19 @@ import openai
 import typing
 import asyncio
 
+from strawberry.dataset import Dataset
 from strawberry.prometheus import Prometheus
 
 
 class User:
-    def __init__(self, prometheus: Prometheus, wait: typing.Callable) -> None:
+    def __init__(self, prometheus: Prometheus, wait: typing.Callable, dataset: Dataset) -> None:
         self._prometheus = prometheus
         self._client = openai.AsyncOpenAI(
             base_url="http://server:8000/v1",
             api_key="token",
         )
         self._wait = wait
+        self._dataset = dataset
     
     async def start(self) -> None:
         while True:
@@ -25,7 +27,7 @@ class User:
         stream = await self._client.chat.completions.create(
             model="Qwen/Qwen2.5-0.5B-Instruct",
             messages=[
-                {"role": "user", "content": "Hello!"}
+                {"role": "user", "content": self._dataset.get_random_prompt()}
             ],
             stream=True
         )
