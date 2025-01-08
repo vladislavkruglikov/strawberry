@@ -94,7 +94,7 @@ docker run \
 
 ## Plots
 
-Now you are ready to visualize your results in Grafana. Grab this dashboard template and install it into your grafana template. Select source for data your cloud instance
+Now you are ready to visualize your results in Grafana. Grab [this](./grafana/dashboard.json) dashboard template and install it into your grafana template. Select source for data your cloud instance
 
 ## Notes
 
