@@ -10,6 +10,17 @@ Additionally this repository contains notes about metrics and everything I find 
 
 The core idea behind Strawberry is that it is not attached to any particular library or framework. Instead it works with the abstraction provided by the OpenAI API. Any library or framework that provides an OpenAI API most of which already do such as **vLLM** or **SGLang** can be benchmarked with this tool right now with no additional code writing or modifications. This way Strawberry has no information about the internals of the framework. All it cares about is the common protocol which is the OpenAI API chat completions
 
+## 32+ Metrics
+
+Wide range of most popular metrics
+
+* TTFT - time to first token
+* TPOT - time per output token
+* Total latency by percentiles
+* Goodput
+* & others
+* easy to add new metrics
+
 ## Storage
 
 Despite the fact that this section might be seen hard it only needs to be done once and then can be used with any other framework such as **vLLM** or **SGLang**
