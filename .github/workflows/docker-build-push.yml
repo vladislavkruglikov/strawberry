@@ -1,8 +1,5 @@
 name: ci
 
-on:
-  push:
-
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -24,4 +21,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: vladislavkruglikov/strawberry:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/strawberry:${{ github.ref_name }}
