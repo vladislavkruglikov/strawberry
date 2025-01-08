@@ -34,7 +34,10 @@ async def program() -> None:
         wait=lambda: random.uniform(arguments.wait_start, arguments.wait_end), 
         users_per_second=arguments.users_per_second, 
         run_time=arguments.run_time,
-        dataset=dataset
+        dataset=dataset,
+        base_url="http://server:8000/v1",
+        api_key="token",
+        model_name="Qwen/Qwen2.5-0.5B-Instruct"
     )
 
     await run.start()
