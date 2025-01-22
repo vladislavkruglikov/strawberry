@@ -109,28 +109,21 @@ docker run \
   --gpu-memory-utilization 0.1
 ```
 
-## Benchmark
+## Examples
 
-Now you have got your storage set up and inference server running and the only left part is to send requests to the server and record metrics. This is what we are going to do now
+Now you are ready to run 🍓strawberry and here are few examples of use cases
 
-```bash
-docker run \
-  --network strawberry \
-  --rm \
-  --name strawberry \
-  -v $(pwd)/datasets:/mnt/datasets \
-  vladislavkruglikov/strawberry \
-    --run_name_prefix qwen05b_instruct \
-    --openai_base_url http://server:8000/v1 \
-    --model_name Qwen/Qwen2.5-0.5B-Instruct \
-    --prometheus_port 8000 \
-    --dataset_path /mnt/datasets/dataset.txt \
-    --max_users 8 \
-    --wait_start 1 \
-    --wait_end 4 \
-    --users_per_second 1 \
-    --run_time 200000
-```
+* [Benchmark Qwen/Qwen2.5-0.5B-Instruct with vLLM](./examples/benchmark_qwen_vllm.md)
+* [Run prediction batch job using Qwen/Qwen2.5-0.5B-Instruct with SGLang with local output storage](./examples/batch_qwen_sglang.md)
+* [Run preemprible prediction batch job using Qwen/Qwen2.5-0.5B-Instruct with TGI with aws S3 storage]()
+
+And here are more examples for you to help you run some popular OpenAI compatible server
+
+* [vllm](./examples/vllm.md)
+* [sglang](./examples/sglang.md)
+* [tgi](./examples/tgi.md)
+* [tensorrtllm](./examples/tensorrtllm.md)
+* [lmdeploy](./examples/lmdeploy.md)
 
 ## Plots
 
@@ -156,3 +149,7 @@ Great articles
 
 * https://hao-ai-lab.github.io/blogs/distserve
 * https://blog.ori.co/how-to-perform-a-cost-per-token-analysis-of-self-hosted-llms-dbrx-from-databricks
+
+# Developers
+
+Install pre commit before start

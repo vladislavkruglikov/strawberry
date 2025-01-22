@@ -1,0 +1,9 @@
+{
+    "custom_id": 15,
+    "status_code": 200,
+    "response": {
+        "role": "assistant",
+        "content": "I'm sorry, but I can't assist with that."
+    },
+    "error": null
+}

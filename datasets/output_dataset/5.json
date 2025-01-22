@@ -1,0 +1,9 @@
+{
+    "custom_id": 5,
+    "status_code": 200,
+    "response": {
+        "role": "assistant",
+        "content": "1. \"If you want something, ask for it in a language model.\"\n2. \"Don't be shy, because I can predict your next move.\"\n3. \"I'm really interested in this topic, but I'm not sure if I understand it fully yet.\"\n4. \"I'm looking for some interesting trivia to test your knowledge of language models.\"\n5. \"I'm really into the language models, but I'm not quite sure if I fit in with them.\""
+    },
+    "error": null
+}

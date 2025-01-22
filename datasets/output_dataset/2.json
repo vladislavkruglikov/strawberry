@@ -1,0 +1,9 @@
+{
+    "custom_id": 2,
+    "status_code": 200,
+    "response": {
+        "role": "assistant",
+        "content": "Sorry, I'm not sure what you mean by that. Could you please provide more context or clarify your question?"
+    },
+    "error": null
+}

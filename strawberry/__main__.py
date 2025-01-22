@@ -4,35 +4,69 @@ import random
 import asyncio
 import argparse
 
+from pathlib import Path
 from strawberry.run import Run
 from strawberry.user import User
-from strawberry.dataset import Dataset
+from strawberry.dataset import LocalInputDataset, LocalOutputDataset, S3OutputDataset, DummyOutputDataset, FiniteSampler, InfiniteSampler
 from strawberry.prometheus import Prometheus
 
 
+def local_input_output_factory(arguments):
+    input_dataset = None
+    output_dataset = None
+    sampler = None
+
+    if arguments.input == "local":
+        if arguments.input_local_path is not None:
+            input_dataset = LocalInputDataset(arguments.input_local_path)
+        else:
+            raise ValueError("If using local input, --input_local_path must be specified")
+    else:
+        raise ValueError("Unknown type for input, support local")
+
+    if arguments.output is None:
+        output_dataset = DummyOutputDataset()
+    elif arguments.output == "local":
+        if arguments.output_local_path is not None:
+            output_dataset = LocalOutputDataset(arguments.output_local_path)
+        else:
+            raise ValueError("If using local output, --output_local_path must be specified")
+    elif arguments.output == "s3":
+        if arguments.output_s3_path is None:
+            raise ValueError("output_s3_path must be specified if using s3")
+        if arguments.output_s3_bucket is None:
+            raise ValueError("output_s3_bucket if use s3")
+        if arguments.output_s3_aws_access_key_id is None:
+            raise ValueError("output_s3_aws_access_key_id if use s3")
+        if arguments.output_s3_aws_secret_access_key is None:
+            raise ValueError("output_s3_aws_secret_access_key if use s3")
+        if arguments.output_s3_endpoint_url is None:
+            raise ValueError("output_s3_endpoint_url if use s3")
+        if arguments.output_s3_region_name is None:
+            raise ValueError("output_s3_region_name is use s3")
+        
+        output_dataset = S3OutputDataset(
+            aws_access_key=arguments.output_s3_aws_access_key_id,
+            aws_secret_key=arguments.output_s3_aws_secret_access_key,
+            bucket=arguments.output_s3_bucket,
+            address=arguments.output_s3_endpoint_url,
+            base_path=arguments.output_s3_path,
+            output_s3_region_name=arguments.output_s3_region_name
+        )
+    else:
+        raise ValueError("Unknown type for output, local, s3 are supported")
+    
+    if arguments.sampler == "finite":
+        sampler = FiniteSampler(input_dataset=input_dataset, output_dataset=output_dataset, overwrite=arguments.overwrite)
+    elif arguments.sampler == "infinite":
+        sampler = InfiniteSampler(input_dataset=input_dataset, output_dataset=output_dataset, overwrite=arguments.overwrite)
+    else:
+        raise ValueError("sampler finite, infinite")
+        
+    return input_dataset, output_dataset, sampler
+
+
 async def program() -> None:
-    """
-    Entry point for the Strawberry program.
-
-    This function parses command-line arguments, initializes necessary components such as Prometheus, Dataset,
-    and Run instances, and starts the experiment.
-
-    Command-Line Arguments:
-        --run_name_prefix (str): Prefix for the run name, required.
-        --max_users (int, optional): Maximum number of users to create during the run (default: 8).
-        --wait_start (int, optional): Minimum wait time between user actions in seconds (default: 1).
-        --wait_end (int, optional): Maximum wait time between user actions in seconds (default: 4).
-        --users_per_second (int, optional): Number of users to create per second (default: 1).
-        --run_time (int, optional): Total runtime of the experiment in seconds (default: 128).
-        --prometheus_port (int): Port to expose Prometheus metrics, required.
-        --openai_base_url (str): OpenAI API base URL (e.g., http://localhost:8000/v1), required.
-        --token (str, optional): API token for authentication (default: "token").
-        --model_name (str): Name of the model to use for requests, required.
-        --dataset_path (str): Path to the dataset file, required.
-
-    Raises:
-        SystemExit: If required arguments are not provided or invalid values are passed.
-    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--run_name_prefix", type=str, required=True)
@@ -66,12 +100,23 @@ async def program() -> None:
         help="Model name to be used while sending requests"
     )
 
-    parser.add_argument(
-        "--dataset_path",
-        type=str,
-        required=True,
-        help="Path to dataset to be used for sampling"
-    )
+    parser.add_argument("--input", type=str, required=True)
+
+    parser.add_argument("--input_local_path", type=Path, required=False)
+
+    parser.add_argument("--output", type=str, required=False)
+
+    parser.add_argument("--output_local_path", type=Path, required=False)
+
+    parser.add_argument("--output_s3_path", type=str, required=False)
+    parser.add_argument("--output_s3_bucket", type=str, required=False)
+    parser.add_argument("--output_s3_aws_access_key_id", type=str, required=False)
+    parser.add_argument("--output_s3_aws_secret_access_key", type=str, required=False)
+    parser.add_argument("--output_s3_endpoint_url", type=str, required=False)
+    parser.add_argument("--output_s3_region_name", type=str, required=False)
+
+    parser.add_argument("--sampler", type=str, required=False)
+    parser.add_argument("--overwrite", action="store_true", required=False, default=False)
 
     arguments = parser.parse_args()
 
@@ -79,15 +124,6 @@ async def program() -> None:
     RESET = "\033[0m"
 
     def bold_text(text):
-        """
-        Formats the given text as bold.
-
-        Args:
-            text (str): The text to format.
-
-        Returns:
-            str: The formatted text with bold ANSI escape codes.
-        """
         return f"\033[1m{text}\033[0m"
 
     run_name = arguments.run_name_prefix + "_" + "".join(random.choices(string.ascii_lowercase, k=8))
@@ -96,7 +132,7 @@ async def program() -> None:
     
     prometheus = Prometheus(run=run_name, prometheus_port=arguments.prometheus_port)
 
-    dataset = Dataset(file_path=arguments.dataset_path)
+    input_dataset, output_dataset, sampler = local_input_output_factory(arguments)
 
     run = Run(
         prometheus=prometheus, 
@@ -104,18 +140,14 @@ async def program() -> None:
         wait=lambda: random.uniform(arguments.wait_start, arguments.wait_end), 
         users_per_second=arguments.users_per_second, 
         run_time=arguments.run_time,
-        dataset=dataset,
+        dataset=sampler,
         base_url=arguments.openai_base_url,
         api_key=arguments.token,
-        model_name=arguments.model_name
+        model_name=arguments.model_name,
+        output_dataset=output_dataset
     )
 
     await run.start()
 
 if __name__ == "__main__":
-    """
-    Main entry point for the Strawberry program.
-
-    Uses asyncio to run the asynchronous `program` function.
-    """
     asyncio.run(program())
