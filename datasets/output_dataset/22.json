@@ -1,0 +1,9 @@
+{
+    "custom_id": 22,
+    "status_code": 200,
+    "response": {
+        "role": "assistant",
+        "content": "Certainly! Please provide the negative review and I will draft a professional response."
+    },
+    "error": null
+}

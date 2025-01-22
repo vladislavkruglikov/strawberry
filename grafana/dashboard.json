@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 21,
+  "id": 14,
   "links": [],
   "panels": [
     {
@@ -99,11 +99,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.4.0-79828",
+      "pluginVersion": "11.5.0-81311",
       "targets": [
         {
           "datasource": {
@@ -113,7 +114,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "users_total{run=\"$run\"}",
+          "expr": "users{run=\"$run\"}",
           "format": "time_series",
           "fullMetaSearch": false,
           "hide": false,
@@ -205,11 +206,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.4.0-79828",
+      "pluginVersion": "11.5.0-81311",
       "targets": [
         {
           "datasource": {
@@ -333,11 +335,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.4.0-79828",
+      "pluginVersion": "11.5.0-81311",
       "targets": [
         {
           "disableTextWrap": false,
@@ -487,11 +490,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.4.0-79828",
+      "pluginVersion": "11.5.0-81311",
       "targets": [
         {
           "disableTextWrap": false,
@@ -669,11 +673,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.4.0-79828",
+      "pluginVersion": "11.5.0-81311",
       "targets": [
         {
           "disableTextWrap": false,
@@ -823,11 +828,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.4.0-79828",
+      "pluginVersion": "11.5.0-81311",
       "targets": [
         {
           "datasource": {
@@ -982,11 +988,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.4.0-79828",
+      "pluginVersion": "11.5.0-81311",
       "targets": [
         {
           "datasource": {
@@ -1126,11 +1133,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.4.0-79828",
+      "pluginVersion": "11.5.0-81311",
       "targets": [
         {
           "datasource": {
@@ -1309,11 +1317,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.4.0-79828",
+      "pluginVersion": "11.5.0-81311",
       "targets": [
         {
           "datasource": {
@@ -1389,6 +1398,99 @@
       ],
       "title": "Decode Tokens Per Request By Percentile",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafanacloud-prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 27
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.0-81311",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum by (code) (response_code_total{run=\"$run\"})",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Status coded total",
+      "type": "timeseries"
     }
   ],
   "preload": false,
@@ -1398,17 +1500,17 @@
     "list": [
       {
         "current": {
-          "text": "cSAhWmTZ",
-          "value": "cSAhWmTZ"
+          "text": "qwen05b_instruct_gvxsbnff",
+          "value": "qwen05b_instruct_gvxsbnff"
         },
-        "definition": "label_values(request_total_latency_seconds_bucket,run)",
+        "definition": "label_values(response_code_total,run)",
         "description": "",
         "label": "run",
         "name": "run",
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(request_total_latency_seconds_bucket,run)",
+          "query": "label_values(response_code_total,run)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -1465,13 +1567,13 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "strawberry",
-  "uid": "de9anv8fataf4c",
-  "version": 53,
+  "uid": "strawberry",
+  "version": 6,
   "weekStart": ""
 }

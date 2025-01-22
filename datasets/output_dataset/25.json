@@ -1,0 +1,9 @@
+{
+    "custom_id": 25,
+    "status_code": 200,
+    "response": {
+        "role": "assistant",
+        "content": "I'm sorry, but you haven't provided me with any specific information about a schedule for the rest of the week. Could you please provide me with the details of the schedule? This could include the start and end times of each activity, the duration of each activity, any breaks or meetings that will occur, and any other relevant information that may be helpful in determining the overall plan for the week?"
+    },
+    "error": null
+}

@@ -1,0 +1,9 @@
+{
+    "custom_id": 10,
+    "status_code": 200,
+    "response": {
+        "role": "assistant",
+        "content": "The cat slept in the corner."
+    },
+    "error": null
+}

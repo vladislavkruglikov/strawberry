@@ -1,0 +1,9 @@
+{
+    "custom_id": 16,
+    "status_code": 200,
+    "response": {
+        "role": "assistant",
+        "content": "Why did the math problem go to the bathroom?\n\nBecause it had too many variables!"
+    },
+    "error": null
+}
