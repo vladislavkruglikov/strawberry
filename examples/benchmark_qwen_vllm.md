@@ -12,6 +12,7 @@ and send to server then sleep random time between 1 second and 4 seconds. Experi
 docker run \
   --network strawberry \
   --rm \
+  -e LOGURU_LEVEL=INFO \
   --name strawberry \
   -v $(pwd)/datasets:/mnt/datasets \
   vladislavkruglikov/strawberry \
