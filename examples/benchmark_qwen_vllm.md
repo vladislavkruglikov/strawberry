@@ -15,7 +15,7 @@ docker run \
   -e LOGURU_LEVEL=INFO \
   --name strawberry \
   -v $(pwd)/datasets:/mnt/datasets \
-  vladislavkruglikov/strawberry \
+  strawberry \
     --run_name_prefix qwen05b_instruct \
     --openai_base_url http://server:8000/v1 \
     --model_name Qwen/Qwen2.5-0.5B-Instruct \
@@ -23,7 +23,7 @@ docker run \
     --max_users 8 \
     --wait_start 1 \
     --wait_end 4 \
-    --users_per_second 1 \
+    --spawn_rate 5 \
     --run_time 128 \
     --input local \
     --input_local_path /mnt/datasets/dataset.jsonl \
