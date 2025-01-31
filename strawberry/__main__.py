@@ -74,7 +74,7 @@ async def program() -> None:
     parser.add_argument("--max_users", type=int, required=False, default=8)
     parser.add_argument("--wait_start", type=int, required=False, default=1)
     parser.add_argument("--wait_end", type=int, required=False, default=4)
-    parser.add_argument("--users_per_second", type=int, required=False, default=1)
+    parser.add_argument("--spawn_rate", type=float, required=False, default=1) # rate to spawn, users per second. 0.1 means 0.1 user per second, 1 user once in 10 seconds
     parser.add_argument("--run_time", type=int, required=False, default=128)
     parser.add_argument("--prometheus_port", type=int, required=True)
 
@@ -138,7 +138,7 @@ async def program() -> None:
         prometheus=prometheus, 
         max_users=arguments.max_users, 
         wait=lambda: random.uniform(arguments.wait_start, arguments.wait_end), 
-        users_per_second=arguments.users_per_second, 
+        spawn_rate=arguments.spawn_rate, 
         run_time=arguments.run_time,
         dataset=sampler,
         base_url=arguments.openai_base_url,
