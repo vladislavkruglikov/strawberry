@@ -100,6 +100,8 @@ async def program() -> None:
         help="Model name to be used while sending requests"
     )
 
+    parser.add_argument("--requester", type=str, required=False, default="openai")
+
     parser.add_argument("--input", type=str, required=True)
 
     parser.add_argument("--input_local_path", type=Path, required=False)
@@ -144,7 +146,8 @@ async def program() -> None:
         base_url=arguments.openai_base_url,
         api_key=arguments.token,
         model_name=arguments.model_name,
-        output_dataset=output_dataset
+        output_dataset=output_dataset,
+        requester_name=arguments.requester
     )
 
     await run.start()

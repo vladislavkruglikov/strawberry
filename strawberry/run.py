@@ -5,7 +5,7 @@ import asyncio
 from loguru import logger
 from strawberry.user import User
 from strawberry.dataset import Sampler, OutputDataset
-from strawberry.requester import Requester
+from strawberry.requester import Requester, SglangRequester
 from strawberry.prometheus import Prometheus
 
 
@@ -23,6 +23,7 @@ class Run:
         api_key: str,
         model_name: str,
         output_dataset: OutputDataset,
+        requester_name: str
     ) -> None:
         self._prometheus = prometheus
         self._max_users = max_users
@@ -35,13 +36,21 @@ class Run:
         self._api_key = api_key
         self._model_name = model_name
         self._output_dataset = output_dataset
-        self._requester = Requester(
-            prometheus=self._prometheus,
-            base_url=self._base_url,
-            api_key=self._api_key,
-            model_name=self._model_name
-        )
 
+        if requester_name == "openai":
+            self._requester = Requester(
+                prometheus=self._prometheus,
+                base_url=self._base_url,
+                api_key=self._api_key,
+                model_name=self._model_name
+            )
+        elif requester_name == "sglang":
+            self._requester = SglangRequester(
+                prometheus=self._prometheus,
+                base_url=self._base_url,
+                api_key=self._api_key,
+                model_name=self._model_name
+            )
 
     async def start(self) -> None:
         logger.info("Start to load dataset")
