@@ -104,7 +104,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "datasource": {
@@ -211,7 +211,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "datasource": {
@@ -340,7 +340,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "disableTextWrap": false,
@@ -495,7 +495,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "disableTextWrap": false,
@@ -678,7 +678,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "disableTextWrap": false,
@@ -833,7 +833,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "datasource": {
@@ -993,26 +993,20 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "grafanacloud-prom"
           },
-          "disableTextWrap": false,
           "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum(rate(prefill_tokens_sum{run=\"$run\"}[$range]))",
-          "format": "time_series",
-          "fullMetaSearch": false,
+          "expr": "(\n  sum by (run)(rate(prefill_tokens_sum{run=\"$run\"}[$range]))\n /\n  sum by (run)(rate(prefill_time_seconds_sum{run=\"$run\"}[$range]))\n)\n* on(run) group_left() (users{run=\"$run\"})",
           "hide": false,
-          "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "prefill",
           "range": true,
-          "refId": "D",
-          "useBackend": false
+          "refId": "B"
         },
         {
           "datasource": {
@@ -1020,12 +1014,12 @@
             "uid": "grafanacloud-prom"
           },
           "editorMode": "code",
-          "expr": "sum(rate(decode_tokens_sum{run=\"$run\"}[$range]))",
+          "expr": "(\n  sum by (run)(rate(decode_tokens_sum{run=\"$run\"}[$range]))\n /\n  sum by (run)(rate(decode_time_seconds_sum{run=\"$run\"}[$range]))\n)\n* on(run) group_left() (users{run=\"$run\"})",
           "hide": false,
           "instant": false,
           "legendFormat": "decode",
           "range": true,
-          "refId": "A"
+          "refId": "C"
         }
       ],
       "title": "Processed Tokens Count Per Second",
@@ -1138,7 +1132,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "datasource": {
@@ -1322,7 +1316,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "datasource": {
@@ -1479,7 +1473,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.0-81311",
+      "pluginVersion": "11.5.0-81938",
       "targets": [
         {
           "editorMode": "code",
@@ -1491,17 +1485,204 @@
       ],
       "title": "Status coded total",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafanacloud-prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 27
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.0-81938",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "prefill_tokens_sum{run=\"$run\"}",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total prompt tokens",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafanacloud-prom"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 27
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.0-81938",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "decode_tokens_sum{run=\"$run\"}",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total decode tokens",
+      "type": "timeseries"
     }
   ],
   "preload": false,
+  "refresh": "5s",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
-          "text": "qwen05b_instruct_gvxsbnff",
-          "value": "qwen05b_instruct_gvxsbnff"
+          "text": "qwen05b_instruct_rczhfovr",
+          "value": "qwen05b_instruct_rczhfovr"
         },
         "definition": "label_values(response_code_total,run)",
         "description": "",
@@ -1567,13 +1748,13 @@
     ]
   },
   "time": {
-    "from": "now-1d",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "strawberry",
   "uid": "strawberry",
-  "version": 6,
+  "version": 9,
   "weekStart": ""
 }

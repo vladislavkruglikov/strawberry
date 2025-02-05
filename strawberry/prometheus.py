@@ -5,9 +5,7 @@ import prometheus_client
 class Prometheus:
     def __init__(self, run: str, prometheus_port: int) -> None:
         self._run = run
-
         prometheus_client.start_http_server(prometheus_port)
-
         self._request_latency_metric = prometheus_client.Histogram(
             name="request_total_latency_seconds",
             documentation="Total latency of request in seconds",
@@ -19,7 +17,6 @@ class Prometheus:
                 320.0, 640.0, math.inf,
             ],
         )
-
         self._request_time_to_first_token_latency_metric = prometheus_client.Histogram(
             name="request_time_to_first_token_latency_seconds",
             documentation="Time to first token latency in seconds",
@@ -31,7 +28,6 @@ class Prometheus:
                 320.0, 640.0, math.inf,
             ],
         )
-
         self._request_time_per_output_token_latency_metric = prometheus_client.Histogram(
             name="request_time_per_output_token_latency_seconds",
             documentation="Time per output token latency in seconds",
@@ -43,19 +39,16 @@ class Prometheus:
                 320.0, 640.0, math.inf,
             ],
         )
-
         self._requests_count_metric = prometheus_client.Counter(
             name="requests_count",
             documentation="Total number of requests that are coming to server",
             labelnames=["run"]
         )
-
         self._users_count = prometheus_client.Gauge(
             name="users",
             documentation="Number of users sending requests",
             labelnames=["run"]
         )
-
         self._prefill_tokens = prometheus_client.Histogram(
             name="prefill_tokens",
             documentation="Number of prefill tokens processed",
@@ -66,7 +59,6 @@ class Prometheus:
                 65536, 131072, 262144, 524288, 1048576, math.inf
             ]
         )
-
         self._decode_tokens = prometheus_client.Histogram(
             name="decode_tokens",
             documentation="Number of decode tokens processed",
@@ -77,11 +69,32 @@ class Prometheus:
                 65536, 131072, 262144, 524288, 1048576, math.inf
             ]
         )
-
         self._response_code_count_metric = prometheus_client.Counter(
             name="response_code",
             documentation="Total number of errors",
             labelnames=["run", "code"]
+        )
+        self._prefill_time_seconds = prometheus_client.Histogram(
+            name="prefill_time_seconds",
+            documentation="Time spent on prefill phase in seconds",
+            labelnames=["run"],
+            buckets=[
+                0.005, 0.01, 0.025, 0.05, 0.075, 0.1,
+                0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0,
+                15.0, 20.0, 25.0, 30.0, 40.0, 80.0, 160.0,
+                320.0, 640.0, math.inf,
+            ]
+        )
+        self._decode_time_seconds = prometheus_client.Histogram(
+            name="decode_time_seconds",
+            documentation="Time spent on decode phase in seconds",
+            labelnames=["run"],
+            buckets=[
+                0.005, 0.01, 0.025, 0.05, 0.075, 0.1,
+                0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0,
+                15.0, 20.0, 25.0, 30.0, 40.0, 80.0, 160.0,
+                320.0, 640.0, math.inf,
+            ]
         )
 
     def request_latency_metric(self, latency: float) -> None:
@@ -110,3 +123,9 @@ class Prometheus:
 
     def response_code_count_metric(self, code: str) -> None:
         self._response_code_count_metric.labels(run=self._run, code=code).inc()
+
+    def prefill_time_metric(self, duration: float) -> None:
+        self._prefill_time_seconds.labels(run=self._run).observe(duration)
+
+    def decode_time_metric(self, duration: float) -> None:
+        self._decode_time_seconds.labels(run=self._run).observe(duration)
