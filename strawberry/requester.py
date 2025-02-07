@@ -124,9 +124,9 @@ class SglangRequester:
                 "Content-Type": "application/json"
             }
 
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(timeout=httpx.Timeout(connect=10.0, read=300.0, write=300.0, pool=5.0)) as client:
                 url = f"{self._base_url}/generate"
-                logger.info("Sending request to {} with payload {}", url, payload)
+                #logger.info("Sending request to {} with payload {}", url, payload)
                 async with client.stream("POST", url, json=payload, headers=headers) as response:
                     response.raise_for_status()
                     async for line in response.aiter_lines():
@@ -140,16 +140,17 @@ class SglangRequester:
                                 logger.info("Skipping invalid JSON chunk: {}", e)
                                 continue
 
-                            # logger.info(f"\n\n{data}\n\n")
+                            #logger.info(f"\n\n{data['meta_info']['prompt_tokens']}, {type(data['meta_info'])}\n\n")
                             chunk_text = data.get("text", "")
                             
                             if "meta_info" in data and "completion_tokens" in data["meta_info"]:
                                 completion_tokens = data["meta_info"]["completion_tokens"]
 
                             if is_first_chunk:
-                                prompt_tokens = data["meta_info"]["prompt_tokens"]
-                                self._prometheus.prefill_tokens(prompt_tokens)
-                                logger.debug(f"log prompt_tokens = {prompt_tokens}")
+                                if "meta_info" in data:
+                                    prompt_tokens = data["meta_info"]["prompt_tokens"]
+                                    self._prometheus.prefill_tokens(prompt_tokens)
+                                    logger.debug(f"log prompt_tokens = {prompt_tokens}")
 
                                 time_to_first_token = time.time() - start_time
                                 self._prometheus.request_time_to_first_token_latency_metric(time_to_first_token)
